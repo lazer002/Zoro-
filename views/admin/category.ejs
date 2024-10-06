@@ -1,0 +1,171 @@
+<%- include('common/header.ejs') %>
+
+<div class="container-fluid p-0 bg_01">
+    <div class="d-flex">
+        <div>
+            <%- include('common/sidebar.ejs') %>
+        </div>
+        <div class="w-100 p-3">
+            <div class="rounded-3 border p-3 bggry">
+                <div class="d-flex justify-content-between border-bottom pb-3">
+                    <div>
+                        <h3>Category</h3>
+                        <div>Manage Product Category in Store</div>
+                    </div>
+                    <div><button class="btn border" data-bs-toggle="modal" data-bs-target="#addproduct">+ Add Product</button></div>
+                </div>
+                
+                <div class="py-3">
+                    <div id="search"><input type="text" placeholder="Search..." class="form-control w-25" id="search-input"></div>
+                </div>
+                <div class="container-fluid p-0">
+                    <div class="table-responsive border rounded-3">
+                        <table class="table table-hover text-center">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Category Name</th>
+                                    <th>Category Image</th>
+                                    <th>Category Description</th>
+                                    <th>Category Secondary Image</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (let i = 0; i < category.length; i++) { %>
+                                    <tr class="text-center" id="category-row-<%= category[i]._id %>">
+                                        <td><%= i + 1 %></td>
+                                        <td class="product-name"><%= category[i].product_name %></td>
+                                        <td class="w200"><img src="/static/images/category/pro_category/<%= category[i].product_image %>" width="100px" alt="" class=""></td>
+                                        <td><%= category[i].product_category %></td>
+                                        <td><img src="/static/images/category/pro_category/<%= category[i].sub_product_image %>" alt="" width="130px"></td>
+                                        <td>
+                                            <span class="edit-category" data-id="<%= category[i]._id %>"><i class="fa fa-solid fa-pen-to-square px-2"></i></span>
+                                            <span class="delete-category" data-id="<%= category[i]._id %>"><i class="fa fa-solid fa-trash px-2"></i></span>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Add Product -->
+<div class="modal fade" id="addproduct" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Category</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="my-2">
+                        <div>Category Name</div>
+                        <input id="product_category" class="form-control">
+                    </div>
+                    <div class="my-2">
+                        <div>Category Image</div>
+                        <input type="file" id="product_image" class="form-control">
+                    </div>
+                    <div class="my-2">
+                        <div>Category Secondary Image</div>
+                        <input type="file" id="sub_product_image" class="form-control">
+                    </div>
+                    <div class="my-2">
+                        <div>Category Description</div>
+                        <input type="text" id="product_name" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                <button id="category_sbbtn" class="btn bg">Add Category</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function(){
+    // Add Category
+    $('#category_sbbtn').on('click', function() {
+        var product_image = $('#product_image')[0].files[0];
+        var sub_product_image = $('#sub_product_image')[0].files[0];
+        var product_category = $('#product_category').val();
+        var product_name = $('#product_name').val();
+        
+        var formdata = new FormData();
+        formdata.append('product_category', product_category);
+        formdata.append('product_image', product_image);
+        formdata.append('sub_product_image', sub_product_image);
+        formdata.append('product_name', product_name);
+
+        $.ajax({
+            type: 'POST',
+            url: '/category',
+            data: formdata,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                console.log('Category added');
+                location.reload(); // Reload to see the new category
+            }
+        });
+    });
+
+    // Edit Category
+    $('.edit-category').on('click', function() {
+        var categoryId = $(this).data('id');
+        var productName = $('#category-row-' + categoryId + ' .product-name').text();
+        var productCategory = $('#category-row-' + categoryId + ' td:nth-child(4)').text();
+
+        // Set the values in the modal for editing
+        $('#product_category').val(productCategory);
+        $('#product_name').val(productName);
+
+        // Show modal
+        $('#addproduct').modal('show');
+
+        // Update category on submit
+        $('#category_sbbtn').off('click').on('click', function() {
+            var formdata = new FormData();
+            formdata.append('product_category', productCategory);
+            formdata.append('product_name', productName);
+            formdata.append('category_id', categoryId);
+
+            $.ajax({
+                type: 'PUT',
+                url: '/category/' + categoryId, // Assuming your API is set to handle PUT requests
+                data: formdata,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    console.log('Category updated');
+                    location.reload(); // Reload to see the updated category
+                }
+            });
+        });
+    });
+
+    // Delete Category
+    $('.delete-category').on('click', function() {
+        var categoryId = $(this).data('id');
+
+        if (confirm('Are you sure you want to delete this category?')) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/category/' + categoryId, // Assuming your API is set to handle DELETE requests
+                success: function(response) {
+                    console.log('Category deleted');
+                    $('#category-row-' + categoryId).remove(); // Remove the row from the table
+                }
+            });
+        }
+    });
+});
+</script>
