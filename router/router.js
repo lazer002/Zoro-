@@ -12,7 +12,7 @@ const Keyboard = require('../models/Keyboard');
 const Laptop = require('../models/Laptop');
 const Mouse = require('../models/Mouse');
 const PC = require('../models/Pc');
-const ProductBanner = require('../models/productBanner');
+const ProductBanner = require('../models/ProductBanner');
 const Signup = require('../models/Signup');
 
 
