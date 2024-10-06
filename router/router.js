@@ -2,18 +2,18 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer');
 
-const Banner = require('../models/banner');
-const CarausalBanner = require('../models/carausalBanner');
-const Cart = require('../models/cart');
-const Category = require('../models/category');
-const Controller = require('../models/controller');
-const Headphone = require('../models/headphone');
-const Keyboard = require('../models/keyboard');
-const Laptop = require('../models/laptop');
-const Mouse = require('../models/mouse');
-const PC = require('../models/pc');
+const Banner = require('../models/Banner');
+const CarausalBanner = require('../models/CarausalBanner');
+const Cart = require('../models/Cart');
+const Category = require('../models/Category');
+const Controller = require('../models/Controller');
+const Headphone = require('../models/Headphone');
+const Keyboard = require('../models/Keyboard');
+const Laptop = require('../models/Laptop');
+const Mouse = require('../models/Mouse');
+const PC = require('../models/Pc');
 const ProductBanner = require('../models/productBanner');
-const Signup = require('../models/signup');
+const Signup = require('../models/Signup');
 
 
 const roleGateway = function (roles = []) {
