@@ -16,8 +16,18 @@ const ProductBanner = require('../models/ProductBanner');
 const Signup = require('../models/Signup');
 
 
+const productModelMap = {
+    headphone: Headphone,
+    keyboard: Keyboard,
+    laptop: Laptop,
+    mouse: Mouse,
+    pc: PC,
+};
+
+
 const roleGateway = function (roles = []) {
     return function (req, res, next) {
+        console.log(req.session.role,req.session.user,'jj');
         if (req.session.user && roles.includes(req.session.role)) {
             next(); 
         } else {
@@ -205,7 +215,7 @@ router.get('/PC', async (req, res) => {
         const banner = await ProductBanner.find({ product_category: 'PC' })
                             .select('product_banner product_title product_link');
         const name = await Signup.distinct('user_profile', { user_email: req.session.user });
-        const cou = await Cart.countDocuments({ user_email: req.session.user });
+        const cou = await Cart.find({ user_email: req.session.user });
 
         res.render('pc', { pc, banner, name, cou });
     } catch (err) {
@@ -291,12 +301,17 @@ router.get('/community', async (req, res) => {
     }
 });
 
-// Product Page with Dynamic Parameters
 router.get('/product/:product_category/:product_id', async (req, res) => {
     const { product_id, product_category } = req.params;
 
     try {
-        const productModel = require(`../models/${product_category.toLowerCase()}`);
+        // Fetch the model based on the product_category
+        const productModel = productModelMap[product_category.toLowerCase()];
+        
+        if (!productModel) {
+            return res.status(400).send('Invalid product category');
+        }
+
         const product = await productModel.findOne({ product_id });
         const cartItem = await Cart.findOne({ product_id, user_email: req.session.user });
         const name = await Signup.distinct('user_profile', { user_email: req.session.user });
@@ -308,6 +323,7 @@ router.get('/product/:product_category/:product_id', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 router.get('/cart_page', async (req, res) => {
     if (req.session.user) {
@@ -326,9 +342,10 @@ router.get('/cart_page', async (req, res) => {
     }
 });
  
-router.get('/cartonpage', roleGateway, async (req, res) => {
+router.get('/cartonpage', async (req, res) => {
     try {
         const products = await Cart.find({ user_email: req.session.user });
+        console.log('products: ', products);
 
         if (products.length === 0) {
             res.send({ product: ' ', cou: 0 });
@@ -577,26 +594,28 @@ router.post('/product_bann', bnnr_upload.single('product_banner'), async (req, r
    }
 });
 
-const storage_cart = multer.diskStorage({
-   destination: function (req, file, cb) {
-       cb(null, './public/images/category/cart'); // Path to save cart images
-   },
-   filename: function (req, file, cb) {
-       cb(null, Date.now() + "_" + file.originalname); // Add timestamp to the filename
-   }
-});
-const cart_upload = multer({ storage: storage_cart });
+// const storage_cart = multer.diskStorage({
+//    destination: function (req, file, cb) {
+//        cb(null, './public/images/category/cart'); // Path to save cart images
+//    },
+//    filename: function (req, file, cb) {
+//        cb(null, Date.now() + "_" + file.originalname); // Add timestamp to the filename
+//    }
+// });
+// const cart_upload = multer({ storage: storage_cart });
+// cart_upload.single('cart_img'),
 
-// Add item to cart
-router.post('/cart', cart_upload.single('cart_img'), async (req, res) => {
+
+// // Add item to cart
+router.post('/cart',  async (req, res) => {
    if (req.session.user) {
-       const { product_category, product_quantity, cart_pname, cart_pprice } = req.body;
+       const { product_category, product_quantity, cart_pname, cart_pprice,product_id,cart_img } = req.body;
        const user = req.session.user;
-       const cart_img = req.file ? req.file.filename : ''; // Get the uploaded cart image filename
+    
 
        try {
            // Check if the product already exists in the user's cart
-           const existingProduct = await Cart.findOne({ product_id: req.body.product_id, user_email: user });
+           const existingProduct = await Cart.findOne({ product_id: product_id, user_email: user });
 
            if (existingProduct) {
                // Update the quantity if the product already exists
@@ -608,7 +627,7 @@ router.post('/cart', cart_upload.single('cart_img'), async (req, res) => {
                const newProduct = new Cart({
                    product_category,
                    product_quantity,
-                   product_id: req.body.product_id,
+                   product_id:product_id,
                    cart_image: cart_img,
                    cart_pname,
                    cart_pprice,
@@ -652,14 +671,7 @@ router.post('/quantity_change', async (req, res) => {
    }
 });
 
-const productModelMap = {
-    headphone: Headphone,
-    keyboard: Keyboard,
-    laptop: Laptop,
-    mouse: Mouse,
-    pc: PC,
-    // Add other mappings as needed
-};
+
 
 router.post('/edit_product', async (req, res) => {
     
@@ -692,7 +704,6 @@ const product_upload = multer({ storage: storage_product });
 
 // Update product details
 router.post('/pc_update', product_upload.fields([{ name: 'product_image' }]), async (req, res) => {
-console.log('✌️pc_update --->', req.body);
     
    const ppicFiles = req.files['product_image'];
    const product_image = ppicFiles ? ppicFiles.map(file => file.filename).join(',') : undefined;

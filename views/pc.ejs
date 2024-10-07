@@ -184,7 +184,7 @@
       <div class="row text-center" id="productContainer">
         <% for (let i = 0; i < pc.length; i++) { %>
           <div class="card col-lg-4 col-md-6 bg-transparent border-0 pcard">
-            <a href="/product/<%= pc[i].product_category %>/<%= pc[i].product_id %>" class="text-decoration-none text-light">
+            <a href="/product/<%= pc[i].product_category.toLowerCase() %>/<%= pc[i].product_id %>" class="text-decoration-none text-light">
               <div id="carouselExampleSlidesOnly<%= i %>" class="carousel-fade" data-bs-ride="carousel">
                 <div class="carousel-inner">
                   <% var imgg = pc[i].product_image.split(',') %>

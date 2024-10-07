@@ -9,7 +9,7 @@
     <div class="col-md-5 py-5 1">
       <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
-          <% const image = product[0].product_image.split(',') %>
+          <% const image = product.product_image.split(',') %>
           <% image.forEach((element, index) => { %>
           <div class="carousel-item <%= index === 0 ? 'active' : '' %>" data-bs-interval="2000">
             <img src="/static/images/category/product/<%= element %>" class="img-fluid" alt="Product Image" id="cart_img">
@@ -20,22 +20,22 @@
     </div>
 
     <!-- product description -->
-    <% for (let i = 0; i < product.length; i++) { %>
     <div class="col-md-7 text-light pt-5">
       <h2 class="fw-bold fcolor lol l25" id="cart_pname">
-        <%= product[i].product_name %>
+        <%= product.product_name %>
       </h2>
-      <input type="hidden" class="product_id ram" data-idp="<%= product[i].product_id %>">
-      <input type="hidden" id="product_category" value="<%= product[i].product_category %>">
+      <input type="hidden" class="product_id ram" data-idp="<%= product.product_id %>">
+      <input type="hidden" id="product_category" value="<%= product.product_category %>">
 
-      <% if (results1 == '') { %>
-      <input type="hidden" class="product_quantity" value="">
+      <% if (!results1) { %>
+        <input type="hidden" class="product_quantity" value="">
       <% } else { %>
-      <input type="hidden" class="product_quantity" value="<%= results1[0].product_quantity %>">
+        <input type="hidden" class="product_quantity" value="<%= results1.product_quantity %>">
       <% } %>
+      
 
       <i class="l27 text-warning">BY CORSAIR</i>
-      <h2 class="fw-bold l26" id="cart_pprice">₹<%= product[i].product_price %></h2>
+      <h2 class="fw-bold l26" id="cart_pprice">₹<%= product.product_price %></h2>
       <p class="text-danger l26">(27% off)</p>
       <p class="fw-bold l27">Save ₹1,708 <del>MSRP ₹6,299</del> (Inc of all taxes)</p>
 
@@ -47,7 +47,6 @@
 
       <div class="my-5 l29">Credit Card EMI Plans start from ₹410 <a href="" class="text-decoration-none text-success">View More ></a></div>
     </div>
-    <% } %>
   </div>
 </div>
 
@@ -218,7 +217,6 @@
   $(document).ready(function () {
     var quantity = 0;
 
-    // Event listener for the Add to Cart button
     $(document).on('click', '#cartbtn', function () {
 
       // Extract product image source and split to get the image file name
