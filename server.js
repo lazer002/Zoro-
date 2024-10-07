@@ -26,10 +26,14 @@ app.use(session({
     secret: 'keyboard cat' // Your session secret
 }));
 
-
-
+const PORT = process.env.PORT ||7518;
 app.use('/',router)
-app.listen(8888)
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+
+
 
 
 
