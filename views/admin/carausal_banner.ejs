@@ -277,12 +277,9 @@
                         carusal_id: carusal_id
                     },
                     success: function (response) {
-                        if (response.msg === 'ok') {
-                            alert('Carousel item deleted successfully!');
+                            alert(response.msg);
                             window.location.reload();
-                        } else {
-                            alert('Error deleting item: ' + response.error);
-                        }
+                       
                     },
                     error: function () {
                         alert('An error occurred while deleting the item.');

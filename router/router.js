@@ -27,12 +27,16 @@ const productModelMap = {
 
 const roleGateway = function (roles = []) {
     return function (req, res, next) {
-        console.log(req.session.role,req.session.user,'jj');
-        if (req.session.user && roles.includes(req.session.role)) {
-            next(); 
-        } else {
-            res.redirect('/login'); 
-        }
+        const { user, role } = req.session;  // Destructuring for clarity
+        console.log(role, user, 'session check'); // Improved log message
+
+        // Check if user is logged in and their role is allowed
+        if (user && roles.includes(role)) {
+            return next();  // Proceed to the next middleware/route handler
+        } 
+        
+        // Redirect to login if the user is not authenticated or doesn't have the correct role
+        res.redirect('/login');
     };
 };
 
@@ -64,10 +68,12 @@ const admingateway = function (req, res, next) {
  });
  
  // Profile Route
- router.get('/profile', roleGateway, async (req, res) => {
+ router.get('/profile', async (req, res) => {
      try {
+        
          const name = await Signup.findOne({ user_email: req.session.user, user_role: req.session.role });
          const pc = await Cart.find({ user_email: req.session.user });
+         console.log('✌️name --->', name);
          const cou = await Cart.countDocuments({ user_email: req.session.user });
  
          res.render('profile', {
@@ -228,8 +234,8 @@ router.get('/PC', async (req, res) => {
 router.get('/controller', async (req, res) => {
     try {
         const controller = await Controller.find({});
-        const banner = await ProductBanner.find({ product_category: 'controller' })
-                            .select('product_banner product_title product_link');
+        const banner = await ProductBanner.find({ product_category: 'CONTROLLER' })
+        .select('product_banner product_title product_link');
         const name = await Signup.distinct('user_profile', { user_email: req.session.user });
         const cou = await Cart.countDocuments({ user_email: req.session.user });
 
@@ -239,12 +245,11 @@ router.get('/controller', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
 // Laptop Page
 router.get('/laptop', async (req, res) => {
     try {
         const laptop = await Laptop.find({});
-        const banner = await ProductBanner.find({ product_category: 'laptop' })
+        const banner = await ProductBanner.find({ product_category: 'LAPTOP' })
                             .select('product_banner product_title product_link');
         const name = await Signup.distinct('user_profile', { user_email: req.session.user });
         const cou = await Cart.countDocuments({ user_email: req.session.user });
@@ -261,7 +266,7 @@ router.get('/accessories', async (req, res) => {
         const keyboard = await Keyboard.find({});
         const mouse  = await Mouse.find({});
         const headphone = await Headphone.find({});
-        const banners = await ProductBanner.find({ product_category: 'keyboard' })
+        const banners = await ProductBanner.find({ product_category: 'KEYBOARD' })
                            .select('product_banner product_title product_link');
         const name = await Signup.distinct('user_profile', { user_email: req.session.user });
         const cou = await Cart.countDocuments({ user_email: req.session.user });
@@ -982,10 +987,10 @@ router.post('/update_carausal', carouselImageUpload.single('carausal_image'), as
 // Delete a carousel
 router.post('/delete_carausal', async (req, res) => {
 console.log('✌️delete_carausal --->', req.body);
-    const { carausal_id } = req.body;
+    const { carusal_id } = req.body;
 
     try {
-        const result = await CarausalBanner.deleteOne({ carausal_id: carausal_id });
+        const result = await CarausalBanner.deleteOne({ carausal_id: carusal_id });
 
         if (result.deletedCount > 0) {
             res.send({ msg: 'Carousel deleted successfully' });
