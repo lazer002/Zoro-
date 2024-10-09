@@ -39,6 +39,26 @@ $(document).ready(function () {
     var randomColor = '#' + Math.floor(Math.random()*16777215).toString(16); 
     $(this).css('background-color', randomColor);
 });
+
+let items = document.querySelectorAll('.ala .carousel-item');
+
+items.forEach((el) => {
+  const minPerSlide = 4;
+  let next = el.nextElementSibling;
+  
+  // Make sure to clone the next 3 cards if there are fewer than 4 items per slide
+  for (let i = 1; i < minPerSlide; i++) {
+    if (!next) {
+      next = items[0]; // Wrap carousel to the first item if no next sibling
+    }
+    
+    let cloneChild = next.cloneNode(true);
+    el.appendChild(cloneChild.children[0]); // Append the child card
+    next = next.nextElementSibling;
+  }
+});
+
+
 });
 
 

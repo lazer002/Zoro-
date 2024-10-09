@@ -28,7 +28,7 @@
                   </div>
                   <div class="card-body text-light">
                     <h5><%= pc[i].product_name %></h5>
-                    <span class="text-light star fs-4"></span>
+                    <span class="text star fs-4"></span>
                     <p class="fw-bold"> ₹<%= pc[i].product_price %> <del class="text-body">₹<%= pc[i].orignal_price %></del></p>
                   </div>
                 </div>
@@ -261,6 +261,7 @@
 
 
 
+  <%- include('common/footer.ejs') %>     
 
 
 
@@ -269,19 +270,3 @@
 
 
 
-        
-<script>let items = document.querySelectorAll('.ala .alla')
-
-  items.forEach((el) => {
-    const minPerSlide = 4
-    let next = el.nextElementSibling
-    for (var i = 1; i < minPerSlide; i++) {
-      if (!next) {
-        // wrap carousel by using first child
-        next = items[0]
-      }
-      let cloneChild = next.cloneNode(true)
-      el.appendChild(cloneChild.children[0])
-      next = next.nextElementSibling
-    }
-  })</script>

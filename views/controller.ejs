@@ -14,35 +14,36 @@
 <div class="container text-center my-5">
   <h1 class="fw-bold fcolor py-4 lulu">HOT PRODUCTS</h1>
   <div class="row mx-auto my-auto justify-content-center">
-      <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
-          <div class="carousel-inner" role="listbox">
-              <% for (let i = 0; i < controller.length; i++) { %>
-                  <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-                      <div class="col-md-3">
-                          <a href="/product/<%= controller[i].product_category %>/<%= controller[i].product_id %>" class="text-decoration-none text-light">
-                              <div class="card bg-transparent border-0">
-                                  <div class="card-img">
-                                      <% var imgg = controller[i].product_image.split(',') %>
-                                      <img src="/static/images/category/product/<%= imgg[0].trim() %>" alt="" class="img-fluid">
-                                  </div>
-                                  <div class="card-body text-light">
-                                      <h5><%= controller[i].product_name %></h5>
-                                      <span class="text-light star fs-4"></span>
-                                      <p class="fw-bold">₹<%= controller[i].product_price %> <del class="text-body">₹<%= controller[i].orignal_price %></del></p>
-                                  </div>
-                              </div>
-                          </a>
-                      </div>
+    <div id="recipeCarousel" class="carousel slide ala" data-bs-ride="carousel">
+        <div class="carousel-inner" role="listbox">
+          <% for (let i = 0; i < controller.length; i++) { %>
+            <div class="carousel-item <%= i === 0 ? 'active' : '' %>" data-bs-interval="2000">
+              <div class="col-md-3 lol">
+                <a href="/product/<%= controller[i].product_category %>/<%= controller[i].product_id %>" class="text-decoration-none text-light">
+                  <div class="card bg-transparent border border-0">
+                    <div class="card-img">
+                      <% var imgg = controller[i].product_image.split(',') %>
+                      <img src="/static/images/category/product/<%= imgg[0].trim() %>" alt="" class="img-fluid">
+                    </div>
+                    <div class="card-body text-light">
+                      <h5><%= controller[i].product_name %></h5>
+                      <span class="text-light star fs-4"></span>
+                      <p class="fw-bold">₹<%= controller[i].product_price %> <del class="text-body">₹<%= controller[i].orignal_price %></del></p>
+                    </div>
                   </div>
-              <% } %>
-          </div>
-          <a class="carousel-control-prev bg-transparent" href="#recipeCarousel" role="button" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          </a>
-          <a class="carousel-control-next bg-transparent" href="#recipeCarousel" role="button" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          </a>
+                </a>
+              </div>
+            </div>
+          <% } %>
+        </div>
+        <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </a>
+        <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </a>
       </div>
+      
   </div>
 </div>
 
@@ -211,35 +212,36 @@
 <div class="container text-center my-5">
     <h1 class="fw-bold fcolor py-4 lulu">RELATED PRODUCTS</h1>
     <div class="row mx-auto my-auto justify-content-center">
-      <div id="relatedProductsCarousel" class="carousel slide ala" data-bs-ride="carousel">
-        <div class="carousel-inner" role="listbox">
-          <% for (let i = 0; i < controller.length; i++) { %>
-            <div class="carousel-item <%= i === 0 ? 'active' : '' %>" data-bs-interval="2000">
-              <div class="col-md-3 lol">
-                <a href="/product/<%= controller[i].product_category %>/<%= controller[i].product_id %>" class="text-decoration-none text-light">
-                  <div class="card bg-transparent border border-0">
-                    <div class="card-img">
-                      <% var imgg = controller[i].product_image.split(',') %>
-                      <img src="/static/images/category/product/<%= imgg[0].trim() %>" alt="" class="img-fluid">
-                    </div>
-                    <div class="card-body text-light">
-                      <h5><%= controller[i].product_name %></h5>
-                      <span class="text-light star fs-4"></span>
-                      <p class="fw-bold"> ₹<%= controller[i].product_price %> <del class="text-body">₹<%= controller[i].orignal_price %></del></p>
-                    </div>
+        <div id="recipeCarousel" class="carousel slide ala" data-bs-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+              <% for (let i = 0; i < controller.length; i++) { %>
+                <div class="carousel-item <%= i === 0 ? 'active' : '' %>" data-bs-interval="2000">
+                  <div class="col-md-3 lol">
+                    <a href="/product/<%= controller[i].product_category %>/<%= controller[i].product_id %>" class="text-decoration-none text-light">
+                      <div class="card bg-transparent border border-0">
+                        <div class="card-img">
+                          <% var imgg = controller[i].product_image.split(',') %>
+                          <img src="/static/images/category/product/<%= imgg[0].trim() %>" alt="" class="img-fluid">
+                        </div>
+                        <div class="card-body text-light">
+                          <h5><%= controller[i].product_name %></h5>
+                          <span class="text-light star fs-4"></span>
+                          <p class="fw-bold">₹<%= controller[i].product_price %> <del class="text-body">₹<%= controller[i].orignal_price %></del></p>
+                        </div>
+                      </div>
+                    </a>
                   </div>
-                </a>
-              </div>
+                </div>
+              <% } %>
             </div>
-          <% } %>
-        </div>
-        <a class="carousel-control-prev bg-transparent w-aut" href="#relatedProductsCarousel" role="button" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        </a>
-        <a class="carousel-control-next bg-transparent w-aut" href="#relatedProductsCarousel" role="button" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        </a>
-      </div>
+            <a class="carousel-control-prev bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </a>
+            <a class="carousel-control-next bg-transparent w-aut" href="#recipeCarousel" role="button" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </a>
+          </div>
+          
     </div>
   </div>
 
@@ -253,6 +255,7 @@
 
 
 
+  <%- include('common/footer.ejs') %>     
 
 
 
@@ -263,20 +266,3 @@
 
 
 
-
-        
-<script>let items = document.querySelectorAll('.ala .alla')
-
-  items.forEach((el) => {
-    const minPerSlide = 4
-    let next = el.nextElementSibling
-    for (var i = 1; i < minPerSlide; i++) {
-      if (!next) {
-        // wrap carousel by using first child
-        next = items[0]
-      }
-      let cloneChild = next.cloneNode(true)
-      el.appendChild(cloneChild.children[0])
-      next = next.nextElementSibling
-    }
-  })</script>
