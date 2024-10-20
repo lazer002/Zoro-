@@ -70,7 +70,6 @@ const admingateway = function (req, res, next) {
  // Profile Route
  router.get('/profile', async (req, res) => {
      try {
-        
          const name = await Signup.findOne({ user_email: req.session.user, user_role: req.session.role });
          const pc = await Cart.find({ user_email: req.session.user });
          console.log('✌️name --->', name);
@@ -321,6 +320,7 @@ router.get('/product/:product_category/:product_id', async (req, res) => {
         const cartItem = await Cart.findOne({ product_id, user_email: req.session.user });
         const name = await Signup.distinct('user_profile', { user_email: req.session.user });
         const count = await Cart.countDocuments({ user_email: req.session.user });
+console.log('✌️count --->', count);
 
         res.render('product_param', { product, results1: cartItem, name, cou: count });
     } catch (err) {
@@ -350,7 +350,6 @@ router.get('/cart_page', async (req, res) => {
 router.get('/cartonpage', async (req, res) => {
     try {
         const products = await Cart.find({ user_email: req.session.user });
-        console.log('products: ', products);
 
         if (products.length === 0) {
             res.send({ product: ' ', cou: 0 });
@@ -613,6 +612,7 @@ router.post('/product_bann', bnnr_upload.single('product_banner'), async (req, r
 
 // // Add item to cart
 router.post('/cart',  async (req, res) => {
+    
    if (req.session.user) {
        const { product_category, product_quantity, cart_pname, cart_pprice,product_id,cart_img } = req.body;
        const user = req.session.user;
@@ -626,7 +626,7 @@ router.post('/cart',  async (req, res) => {
                // Update the quantity if the product already exists
                existingProduct.product_quantity = product_quantity; // Update quantity
                await existingProduct.save();
-               res.send({ msg: 'Product quantity updated' });
+               res.send({ msg: 'Product quantity updated',status:200 });
            } else {
                // Insert new product into the cart
                const newProduct = new Cart({
@@ -639,7 +639,7 @@ router.post('/cart',  async (req, res) => {
                    user_email: user,
                });
                await newProduct.save();
-               res.send({ msg: 'Product added to cart' });
+               res.send({ msg: 'Product added to cart',status:200 });
            }
        } catch (err) {
            console.error(err);

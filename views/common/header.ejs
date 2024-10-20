@@ -83,8 +83,8 @@
   <button class="btn btn-transparent bg-black px-3 out lol carts" data-bs-toggle="offcanvas"
     data-bs-target="#offcanvasScrolling">
     <span class="nuu">
-      <% if (cou && cou.length > 0) { %>
-        <%= cou[0].product_quantity %>
+      <% if (cou) { %>
+        <%= cou %>
       <% } else { %>
         0
       <% } %>
@@ -113,45 +113,7 @@
   <script src="/static/cdn/fontawesome.all.min.js"></script>
 
   <script>
-    $(document).ready(function () {
-    
-      // $.ajax({
-      //   type: 'GET',
-      //   url: '/cartonpage',
-      //   success: function (response) {
-      //     document.getElementById('cartbody').innerHTML = ' ';
-      //     if (response.product) {
-      //       for (let i = 0; i < response.product.length; i++) {
-      //         $('#cartbody').append(`
-      //           <div class="py-3 border-bottom border-success">
-      //             <div class="row">
-      //               <img src="/static/images/category/product/${response.product[i].cart_image}" alt="" class="img-fluid">
-      //               <div class="col-6">
-      //                 <span class="ps-2">${response.product[i].cart_pname}</span>
-      //               </div>
-      //               <div class="col-2 pt-1">
-      //                 ${response.product[i].cart_pprice}
-      //               </div>
-      //               <div class="col-2">
-      //                 <input type="number" value="${response.product[i].product_quantity}"
-      //                   class="bg-black text-light w-100 out rounded-2 p-2" id="product_quantity">
-      //                 <input type="hidden" name="" id="product_id" value="${response.product[i].product_id}">
-      //               </div>
-      //               <div class="col-2 ">
-      //                 <button class="dddd bcolor rounded-2 border-0 p-2">
-      //                   <img src="/static/images/icon/delete.png" alt="">
-      //                 </button>
-      //               </div>
-      //             </div>
-      //           </div>
-      //         `);
-      //       }
-      //     } else {
-      //       // Handle case where there are no products
-      //     }
-      //   }
-      // });
-    });
+  
 
     $(document).ready(function () {
       $(document).on('keyup', '#product_quantity', function () {
@@ -218,43 +180,52 @@
     });
 
     $(document).ready(function () {
-      $(document).on('click', '.carts', function () {
-        $.ajax({
-          type: 'GET',
-          url: '/cartonpage',
-          success: function (response) {
-            document.getElementById('cartbody').innerHTML = ' ';
-            if (response.product) {
-              for (let i = 0; i < response.product.length; i++) {
-                $('#cartbody').append(`
-                  <div class="py-3 border-bottom border-success">
-                    <div class="row">
-                      <img src="/static/images/category/product/${response.product[i].cart_image}" alt="" class="img-fluid">
-                      <div class="col-6">
-                        <span class="ps-2">${response.product[i].cart_pname}</span>
-                      </div>
-                      <div class="col-2 pt-1">
-                        ${response.product[i].cart_pprice}
-                      </div>
-                      <div class="col-2">
-                        <input type="number" value="${response.product[i].product_quantity}"
-                          class="bg-black text-light w-100 out rounded-2 p-2" id="product_quantity">
-                        <input type="hidden" name="" id="product_id" value="${response.product[i].product_id}">
-                      </div>
-                      <div class="col-2 ">
-                        <button class="dddd bcolor rounded-2 border-0 p-2">
-                          <img src="/static/images/icon/delete.png" alt="">
-                        </button>
-                      </div>
-                    </div>
+  $(document).on('click', '.carts', function () {
+    $.ajax({
+      type: 'GET',
+      url: '/cartonpage',
+      success: function (response) {
+        document.getElementById('cartbody').innerHTML = ' ';
+        // Check if response.product is a non-empty array
+        if (Array.isArray(response.product) && response.product.length > 0) {
+          for (let i = 0; i < response.product.length; i++) {
+            $('#cartbody').append(`
+              <div class="py-3 border-bottom border-success">
+                <div class="row">
+                  <img src="/static/images/category/product/${response.product[i].cart_image}" alt="" class="img-fluid">
+                  <div class="col-6">
+                    <span class="ps-2">${response.product[i].cart_pname}</span>
                   </div>
-                `);
-              }
-            }
+                  <div class="col-2 pt-1">
+                    ${response.product[i].cart_pprice}
+                  </div>
+                  <div class="col-2">
+                    <input type="number" value="${response.product[i].product_quantity}"
+                      class="bg-black text-light w-100 out rounded-2 p-2" id="product_quantity">
+                    <input type="hidden" id="product_id" value="${response.product[i].product_id}">
+                  </div>
+                  <div class="col-2">
+                    <button class="dddd bcolor rounded-2 border-0 p-2">
+                      <img src="/static/images/icon/delete.png" alt="">
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `);
           }
-        });
-      });
+        } else {
+          // Handle cases where product is not an array or is empty
+          $('#cartbody').append(`
+            <div class="py-3 text-center">
+              <p>Your cart is empty.</p>
+            </div>
+          `);
+        }
+      }
     });
+  });
+});
+
   </script>
 </body>
 
